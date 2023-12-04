@@ -76,8 +76,6 @@ app.delete('/api/notes/:id', (request, response, next) => {
     .catch(error => {
       next(error)
     })
-
-  response.status(204).end()
 })
 
 function unknownEndpoint(request, response) {
