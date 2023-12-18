@@ -1,6 +1,6 @@
 const notesRouter = require('express').Router()
 const Note = require('../models/note')
-const User = require('../models/user')
+const userExtractor = require('../utils/middleware').userExtractor
 
 notesRouter.get('/', async (request, response) => {
 	const notes = await Note.find({}).populate('user', { username: 1, name: 1 })
@@ -16,29 +16,39 @@ notesRouter.get('/:id', async (request, response) => {
 	}
 })
 
-notesRouter.post('/', async (request, response) => {
+/* function getTokenFrom(request) {
+	const authorization = request.get('authorization')
+	if (authorization && authorization.toLowerCase().startsWith('bearer ')) {
+		return authorization.replace('Bearer ', '')
+	}
+	return null
+} */
+
+notesRouter.post('/', userExtractor, async (request, response) => {
 	const body = request.body
-	const user = await User.findById(body.userId)
-	console.log(user)
+	// eslint-disable-next-line no-undef
+
+	const user = request.user
 
 	const note = new Note({
 		content: body.content,
 		important: body.important || false,
-		user: user.id
+		user: user._id
 	})
 
 	const savedNote = await note.save()
 	user.notes = user.notes.concat(savedNote._id)
 	await user.save()
+	
 	response.status(201).json(savedNote)
 })
 
-notesRouter.delete('/:id', async (request, response) => {
+notesRouter.delete('/:id', userExtractor, async (request, response) => {
 	await Note.findByIdAndDelete(request.params.id)
 	response.status(204).end()
 })
 
-notesRouter.put('/:id', async (request, response) => {
+notesRouter.put('/:id', userExtractor, async (request, response) => {
 	const body = request.body
 
 	const note = {

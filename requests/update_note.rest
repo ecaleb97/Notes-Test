@@ -1,0 +1,8 @@
+PUT http://localhost:3001/api/notes/6571c03dc9ae7029a1af7110
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InJvb3QiLCJpZCI6IjY1NmVmMzVkN2I2YmY1YTRjMTQwNDRlNSIsImlhdCI6MTcwMjEyMDQ2MCwiZXhwIjoxNzAyMTI0MDYwfQ.UcrA4NJvXRAoz7SDKPxlzQNkokPFJRxaLzzx5KcX4IM
+Content-Type: application/json
+
+{
+  "content": "updated note",
+  "important": true
+}
